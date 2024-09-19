@@ -71,7 +71,10 @@ case "$base" in
 		# Loop through matching pids
 		for p in $(pgrep -u "$USER" -f "^$ps$" || true); do
 			# Try to kill pid
-			kill $p
+			if [ "$p" = "$$" ] ; then
+				continue
+			fi
+			ps $p >/dev/null && kill $p
 			# And then block until killed
 			while ps $p >/dev/null 2>&1; do
 				kill $p
